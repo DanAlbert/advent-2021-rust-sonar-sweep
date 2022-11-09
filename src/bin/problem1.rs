@@ -1,4 +1,4 @@
-const MY_INPUT: &str = include_str!("input");
+const MY_INPUT: &str = include_str!("inputs/problem1.txt");
 
 fn count_increases(depths: &[i32]) -> i32 {
     let mut last_depth: Option<i32> = None;
