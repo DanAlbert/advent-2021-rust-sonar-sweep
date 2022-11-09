@@ -28,10 +28,10 @@ impl Command {
             .parse::<i32>()
             .map_err(|_| format!("Invalid command value: \"{}\"", value_str))?;
 
-        let action = match action_str {
-            &"up" => Ok(Action::UP),
-            &"down" => Ok(Action::DOWN),
-            &"forward" => Ok(Action::FORWARD),
+        let action = match *action_str {
+            "up" => Ok(Action::UP),
+            "down" => Ok(Action::DOWN),
+            "forward" => Ok(Action::FORWARD),
             _ => Err(format!("Unknown action \"{}\"", action_str)),
         }?;
 
@@ -41,7 +41,7 @@ impl Command {
     pub fn parse_each<'a>(
         lines: impl IntoIterator<Item = &'a str>,
     ) -> Result<Vec<Command>, String> {
-        lines.into_iter().map(|l| Command::parse(l)).collect()
+        lines.into_iter().map(Command::parse).collect()
     }
 }
 
@@ -55,17 +55,17 @@ fn test_parse() {
     );
 
     assert_eq!(
-        Err(format!("Unknown action \"backward\"")),
+        Err("Unknown action \"backward\"".to_string()),
         Command::parse("backward 1")
     );
 
-    assert_eq!(Err(format!("Invalid command: \"\"")), Command::parse(""));
+    assert_eq!(Err("Invalid command: \"\"".to_string()), Command::parse(""));
     assert_eq!(
-        Err(format!("Invalid command: \"up 1 down 2\"")),
+        Err("Invalid command: \"up 1 down 2\"".to_string()),
         Command::parse("up 1 down 2")
     );
     assert_eq!(
-        Err(format!("Invalid command value: \"a\"")),
+        Err("Invalid command value: \"a\"".to_string()),
         Command::parse("up a")
     );
 }
@@ -83,7 +83,7 @@ fn test_parse_each() {
     assert_eq!(Ok(vec!()), Command::parse_each(vec!()));
 
     assert_eq!(
-        Err(format!("Unknown action \"backward\"")),
+        Err("Unknown action \"backward\"".to_string()),
         Command::parse_each(vec!("up 1", "backward 2"))
     );
 }

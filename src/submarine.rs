@@ -33,6 +33,12 @@ impl Submarine {
     }
 }
 
+impl Default for Submarine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[test]
 fn test_dive() {
     let mut sub = Submarine::new();
