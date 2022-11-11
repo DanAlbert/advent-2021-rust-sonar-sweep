@@ -1,41 +1,38 @@
-use crate::command;
-
 pub struct Submarine {
     pub x: i32,
     pub depth: i32,
+    pub aim: i32,
 }
 
 impl Submarine {
-    fn dive(&mut self, delta: i32) {
+    pub(crate) fn aim(&mut self, delta: i32) {
+        self.aim += delta;
+    }
+
+    pub(crate) fn dive(&mut self, delta: i32) {
         self.depth += delta;
     }
 
-    fn ascend(&mut self, delta: i32) {
+    pub(crate) fn ascend(&mut self, delta: i32) {
         self.depth -= delta;
     }
 
-    fn forward(&mut self, delta: i32) {
+    pub(crate) fn forward(&mut self, delta: i32) {
         self.x += delta;
     }
 
     pub fn new() -> Submarine {
-        Submarine { x: 0, depth: 0 }
-    }
-
-    pub fn act_on(&mut self, commands: impl IntoIterator<Item = command::Command>) {
-        for command in commands {
-            match command.action {
-                command::Action::UP => self.ascend(command.value),
-                command::Action::DOWN => self.dive(command.value),
-                command::Action::FORWARD => self.forward(command.value),
-            }
+        Submarine {
+            x: 0,
+            depth: 0,
+            aim: 0,
         }
     }
 }
 
 impl Default for Submarine {
     fn default() -> Self {
-        Self::new()
+        Submarine::new()
     }
 }
 
@@ -94,4 +91,19 @@ fn test_forward() {
     sub.forward(-3);
     assert_eq!(sub.x, 0);
     assert_eq!(sub.depth, 0);
+}
+
+#[test]
+fn test_aim() {
+    let mut sub = Submarine::new();
+    assert_eq!(sub.aim, 0);
+
+    sub.aim(1);
+    assert_eq!(sub.aim, 1);
+
+    sub.aim(2);
+    assert_eq!(sub.aim, 3);
+
+    sub.aim(-3);
+    assert_eq!(sub.aim, 0);
 }
